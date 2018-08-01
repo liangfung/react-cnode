@@ -6,8 +6,14 @@
 - html-webpck-plugin，生成html，插入script，分别是webpack配置的entries
 - webpack的output的publicPath，是静态资源bundle的路径（配置CDN时很有用）
 - webpack的output的hash，chunkhash为根据内容生成的hash
+- htmlPlugin，可以指定模板，根据模板来生成index.html
 
 
 ## React
 - `<App />` jsx格式的代码，会被babel编译成 `React.clearElement()`，这也说明了为什么有jsx的地方就需要 `import React`。当然了，jsx的编译也可以更改成自定义的编译rule。
+- 
+
+## 服务端
+- 服务端文件server.js,本项目用express
+- express.static提供静态文件，可以指定**虚拟路径前缀**
 - 
