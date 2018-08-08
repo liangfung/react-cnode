@@ -1,12 +1,14 @@
 const path = require('path')
 const HTMLPlugin = require('html-webpack-plugin')
 
-module.exports = {
+const isDev = process.env.NODE_ENV === "development"
+
+const config = {
   entry: {
     app: path.join(__dirname, '../client/app.js')
   },
   output: {
-    filename: '[name].[chunkhash].js',
+    filename: '[name].[hash].js',
     path: path.join(__dirname, '../dist'),
     publicPath: '/public'
   },
@@ -26,8 +28,25 @@ module.exports = {
   plugins: [
     new HTMLPlugin(
       {
-        template: path.join(__dirname, '../client/template.html')
+        template: path.join(__dirname, '../client/template.html'),
+        filename: 'index.html'
       }
     )
   ]
 }
+
+if (isDev) {
+  config.devServer = {
+    host: '0.0.0.0',
+    contentBase: path.join(__dirname, '../dist'),
+    port: 7000,
+    historyApiFallback: {
+      // index: '/public/index.html'
+      rewrites: [
+        { from: /\//, to: path.join('/public', 'index.html') }
+      ]
+    }
+  }
+}
+
+module.exports = config
