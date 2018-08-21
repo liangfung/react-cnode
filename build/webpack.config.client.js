@@ -38,10 +38,7 @@ const config = {
 
 if (isDev) {
   config.entry = {
-    app: [
-      'react-hot-loader/patch',
-      path.join(__dirname, '../client/app.js')
-    ]
+    app: path.join(__dirname, '../client/app.js')
   }
   config.devServer = {
     host: '0.0.0.0',
@@ -49,10 +46,10 @@ if (isDev) {
     port: 7000,
     hot: true,
     historyApiFallback: {
-      // index: '/public/index.html'
-      rewrites: [
-        { from: /\//, to: path.join('/public', 'index.html') }
-      ]
+      index: '/public/index.html'
+      // rewrites: [
+      //   { from: /\//, to: path.join('/public', 'index.html') }
+      // ]
     }
   }
 

@@ -21,6 +21,6 @@ if (!isDev) {
   devStatic(app)
 }
 
-app.listen(3000, function () {
-  console.log('server is listening on 3000')
+app.listen(3012, function () {
+  console.log('server is listening on 3012')
 })
