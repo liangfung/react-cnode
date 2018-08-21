@@ -1,30 +1,17 @@
 const path = require('path')
 const webpack = require('webpack')
 const HTMLPlugin = require('html-webpack-plugin')
+const merge = require('webpack-merge')
+const baseConfig = require('./webpack.config.base')
 
-const isDev = process.env.NODE_ENV === "development"
+const isDev = process.env.NODE_ENV === 'development'
 
-const config = {
+let config = merge(baseConfig, {
   entry: {
     app: path.join(__dirname, '../client/app.js')
   },
   output: {
-    filename: '[name].[hash].js',
-    path: path.join(__dirname, '../dist'),
-    publicPath: '/public/'
-  },
-  module: {
-    rules: [
-      {
-        test: /\.jsx$/,
-        loader: 'babel-loader'
-      },
-      {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        exclude: path.resolve(__dirname, '../node_modules')
-      }
-    ]
+    filename: '[name].[hash].js'
   },
   plugins: [
     new HTMLPlugin(
@@ -34,12 +21,9 @@ const config = {
       }
     )
   ]
-}
+})
 
 if (isDev) {
-  config.entry = {
-    app: path.join(__dirname, '../client/app.js')
-  }
   config.devServer = {
     host: '0.0.0.0',
     contentBase: path.join(__dirname, '../dist'),
@@ -53,9 +37,7 @@ if (isDev) {
     }
   }
 
-  config.plugins.push(
-    new webpack.HotModuleReplacementPlugin()
-  )
+  config.plugins.push(new webpack.HotModuleReplacementPlugin())
 }
 
 module.exports = config
