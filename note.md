@@ -30,3 +30,8 @@
 3. template, 使用`axios`拿到client端的devServer编译生成的保存在内存中的template.html(axios在server端也可以使用）
 4. HTML字符串返回，用ReactDomServer.renderToString()将`serverBundle`(mfs中的`bundle string`解析而来的)编辑成HTML字符串
 5. HTML字符串(content)和template拼接起来，形成最终的HTML string，由server返回到client，实现server端直出。
+
+## 工程化构建优化
+1. webpack的configuration文件分为三个，base, client, server，可以有效的减少冗余代码，提高可迭代性
+2. webpack的`target`设置，client端为`web`, server端为`node`
+3. 使用
