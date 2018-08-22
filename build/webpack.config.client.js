@@ -7,6 +7,7 @@ const baseConfig = require('./webpack.config.base')
 const isDev = process.env.NODE_ENV === 'development'
 
 let config = merge(baseConfig, {
+  target: 'web',
   entry: {
     app: path.join(__dirname, '../client/app.js')
   },
