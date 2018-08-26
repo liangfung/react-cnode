@@ -1,4 +1,4 @@
-import App from './App.jsx'
+import App from './views/App.jsx'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
@@ -14,9 +14,9 @@ render(App)
 if (module.hot) {
   // app.jsx更新了
   // `module.hot.accept('./name', callback)`
-  module.hot.accept('./App.jsx', () => {
+  module.hot.accept('./views/App.jsx', () => {
     // require更新后的app.jsx 重新render
-    const NextApp  = require('./App.jsx').default
+    const NextApp  = require('./views/App.jsx').default
     render(NextApp)
     console.log('---HMR work---')
   })
