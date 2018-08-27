@@ -6,6 +6,7 @@ const app = express()
 const favicon = require('serve-favicon')
 
 const isDev = process.env.NODE_ENV === 'development'
+const PORT = 3012
 
 app.use(favicon(path.join(__dirname, '../favicon.ico')))
 
@@ -25,6 +26,6 @@ if (!isDev) {
   devStatic(app)
 }
 
-app.listen(3012, function () {
-  console.log('server is listening on 3012')
+app.listen(PORT, function () {
+  console.log(`server is listening on port ${PORT}`)
 })
