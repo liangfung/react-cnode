@@ -1,12 +1,16 @@
 import App from './views/App.jsx'
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { BrowserRouter } from 'react-router-dom'
 
 const root = document.getElementById('root')
 
 const render = Component => {
-  ReactDOM.hydrate(<Component />, root)
-  // ReactDOM.render(<Component />, root)
+  ReactDOM.hydrate(
+    <BrowserRouter>
+      <Component />
+    </BrowserRouter>,
+    root)
 }
 
 render(App)
