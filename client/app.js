@@ -9,9 +9,11 @@ const root = document.getElementById('root')
 
 const render = Component => {
   ReactDOM.hydrate(
-    <BrowserRouter>
-      <Component />
-    </BrowserRouter>,
+    <Provider appState={appState}>
+      <BrowserRouter>
+        <Component />
+      </BrowserRouter>
+    </Provider>,
     root)
 }
 
