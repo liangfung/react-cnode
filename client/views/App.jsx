@@ -6,7 +6,6 @@ export default class App extends React.Component {
   render() {
     return (
       <div>
-        <div>Hello webpack</div>
         <Link to='/list'>首页</Link>
         <br />
         <Link to='/detail'>detail</Link>

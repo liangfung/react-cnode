@@ -9,9 +9,16 @@ class TopicList extends React.Component {
     appState: PropTypes.instanceOf(AppState).isRequired
   }
 
+  changeName = e => {
+    this.props.appState.changeName(e.target.value)
+  }
+
   render() {
     return (
-      <div>{this.props.appState.msg}</div>
+      <div>
+        <input type='text' onChange={this.changeName} defaultValue={this.props.appState.name} />
+        <span>{this.props.appState.msg}</span>
+      </div>
     )
   }
 }
