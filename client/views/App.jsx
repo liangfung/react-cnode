@@ -6,9 +6,9 @@ export default class App extends React.Component {
   render() {
     return (
       <div>
-        <Link to='/list'>首页</Link>
+        <Link to='/list'>列表页</Link>
         <br />
-        <Link to='/detail'>detail</Link>
+        <Link to='/detail'>详情页</Link>
         <Routes />
       </div>
     )

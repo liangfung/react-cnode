@@ -35,3 +35,9 @@
 1. webpack的configuration文件分为三个，base, client, server，可以有效的减少冗余代码，提高可迭代性
 2. webpack的`target`设置，client端为`web`, server端为`node`
 3. 使用
+
+## cnode api 代理
+1. 某些API是需要用户登录之后才能请求请求成功的，其登录校验是使用session机制验证accessToken。在node服务端可以使用以下工具实现
+  - body-parser（parse请求body）
+  - express-session（在服务端保存session,真正上线的话session存在数据库）
+  - query-string
