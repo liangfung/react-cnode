@@ -1,5 +1,7 @@
 const express = require('express')
 const ReactSSR = require('react-dom/server')
+const bodyParser = require('body-parser')
+const session = require('express-session')
 const path = require('path')
 const fs = require('fs')
 const app = express()
@@ -10,6 +12,24 @@ const PORT = 3012
 
 app.use(favicon(path.join(__dirname, '../favicon.ico')))
 
+// 解析json格式数据并挂载在req.body上
+// Parse incoming request bodies in a moddleware before your handlers,
+// available under the `req.body` proterty.
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
+
+// 把session存到运行时内存中
+app.use(session({
+  maxAge: 10 * 1000 * 60,
+  name: 'cid',
+  resave: false,
+  saveUninitialized: false,
+  secret: 'react-cnode haha'
+}))
+
+// api 代理
+app.use('/api/user', require('./util/handle-login'))
+app.use('/api', require('./util/proxy'))
 
 if (!isDev) {
   const serverEntry = require('../dist/server-entry').default
