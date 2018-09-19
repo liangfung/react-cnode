@@ -35,6 +35,11 @@ if (isDev) {
       // rewrites: [
       //   { from: /\//, to: path.join('/public', 'index.html') }
       // ]
+    },
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3012'
+      }
     }
   }
 

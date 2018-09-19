@@ -9,6 +9,8 @@ export default class App extends React.Component {
         <Link to='/list'>列表页</Link>
         <br />
         <Link to='/detail'>详情页</Link>
+        <br />
+        <Link to='/test'>测试</Link>
         <Routes />
       </div>
     )
