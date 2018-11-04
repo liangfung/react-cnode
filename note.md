@@ -38,6 +38,6 @@
 
 ## cnode api 代理
 1. 某些API是需要用户登录之后才能请求请求成功的，其登录校验是使用session机制验证accessToken。在node服务端可以使用以下工具实现
-  - body-parser（parse请求body）
+  - body-parser（parse请求body,然后能在req.body中拿到req的请求payload）
   - express-session（在服务端保存session,真正上线的话session存在数据库）
   - query-string
