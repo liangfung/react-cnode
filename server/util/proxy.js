@@ -19,6 +19,12 @@ module.exports = function (req, res, next) {
   axios(`${baseUrl}${path}`, {
     method: req.method,
     params: query,
+    // data: Object.assign({}, req.body, {
+    //   accesstoken: user.accessToken
+    // }),
+    // headers: {
+    //   'Content-Type': 'application/json; charset=utf-8'
+    // }
     data: querystring.stringify(Object.assign({}, req.body, {
       accesstoken: user.accessToken
     })),
