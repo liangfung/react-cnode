@@ -22,7 +22,6 @@ class TopicList extends React.Component {
       </div>
     )
   }
-
   
 }
 

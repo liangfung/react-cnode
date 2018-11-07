@@ -23,13 +23,13 @@ export default class extends React.Component {
   }
 
   login = () => {
-    axios.post('/api/user/login', { accesstoken: 'baed47d2-c2b4-4e4c-8888-89ba10ac6435' })
+    axios.post('/api/user/login', { accessToken: 'baed47d2-c2b4-4e4c-8888-89ba10ac6435' })
       .then(res => console.log(res))
       .catch(err => console.log(err))
   }
 
   markAll =() => {
-    axios.post('api/message/mark_all?needAccessToken=true')
+    axios.get('api/message/count?needAccessToken=true')
       .then(res => console.log(res))
       .catch(err => console.log(err))
   }

@@ -8,10 +8,8 @@ const axios = require('axios')
 const baseUrl = 'https://cnodejs.org/api/v1'
 
 router.post('/login', function (req, res, next) {
-  console.log(req.url, '-----req-----')
-  axios.post(`${baseUrl}/accesstoken`, { accesstoken: req.body.accesstoken })
+  axios.post(`${baseUrl}/accesstoken`, { accesstoken: req.body.accessToken })
     .then(resp => {
-      console.log(resp, '-----resp----')
       if (resp.status === 200 && resp.data.success) {
         // 如果返回正确，保存到服务器内存session中
         req.session.user = {
