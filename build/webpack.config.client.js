@@ -36,10 +36,8 @@ if (isDev) {
       //   { from: /\//, to: path.join('/public', 'index.html') }
       // ]
     },
-    proxy: {
-      '/api': {
-        target: 'http://localhost:3012'
-      }
+    proxy: {  // client 代理到 server
+      '/api': 'http://localhost:3012'
     }
   }
 

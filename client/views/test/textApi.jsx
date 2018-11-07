@@ -5,8 +5,9 @@ export default class extends React.Component {
   render() {
     return (
       <div>
-        <a href="javascript:;" onClick={this.getTopics}>test topics</a>
-        <a href='javascript:;' >test login</a>
+        <button href="javascript:;" onClick={this.getTopics}>test topics</button>
+        <button href='javascript:;' onClick={this.login}>test login</button>
+        <button href="javascript:;" onClick={this.markAll}>mark all</button>
       </div>
     )
   }
@@ -19,5 +20,17 @@ export default class extends React.Component {
       .catch(err => {
         console.log(err)
       })
+  }
+
+  login = () => {
+    axios.post('/api/user/login', { accesstoken: 'baed47d2-c2b4-4e4c-8888-89ba10ac6435' })
+      .then(res => console.log(res))
+      .catch(err => console.log(err))
+  }
+
+  markAll =() => {
+    axios.post('api/message/mark_all?needAccessToken=true')
+      .then(res => console.log(res))
+      .catch(err => console.log(err))
   }
 }

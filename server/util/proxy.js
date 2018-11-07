@@ -3,6 +3,7 @@ const baseUrl = 'http://cnodejs.org/api/v1'
 
 module.exports = function (req, res, next) {
   const path = req.path
+  console.log('path---',req.headers)
   const user = req.session.user || {}
   const needAccessToken = req.query.needAccessToken  // 是否需要seesion token
 
@@ -14,7 +15,6 @@ module.exports = function (req, res, next) {
   }
 
   const query = Object.assign({}, req.query)
-  console.log(query)
   if (query.needAccessToken) delete query.needAccessToken
 
   axios(`${baseUrl}${path}`, {
@@ -28,6 +28,7 @@ module.exports = function (req, res, next) {
     }
   })
     .then(resp => {
+      console.log(resp.data, 'resp')
       if (resp.status === 200) {
         res.send(resp.data)
       } else {
@@ -35,6 +36,7 @@ module.exports = function (req, res, next) {
       }
     })
     .catch(err => {
+      console.log(err, 'err')
       if (err.response) {  // cnode API有响应，但有业务错误
         res.status(res.status).send(err.response.data)
       } else {
