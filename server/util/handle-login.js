@@ -28,7 +28,7 @@ router.post('/login', function (req, res, next) {
       if (err.response) {  // API服务有返回，属于业务逻辑的错误
         res.json({  // 将错误返回给客户端
           success: false,
-          data: err.response
+          data: err.response.data
         })
       } else {     // 属于网络错误
         next(err)  // 将错误抛给全局的错误处理器

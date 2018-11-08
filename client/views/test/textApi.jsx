@@ -29,7 +29,7 @@ export default class extends React.Component {
   }
 
   markAll =() => {
-    axios.get('api/message/count?needAccessToken=true')
+    axios.post('api/message/mark_all?needAccessToken=true')
       .then(res => console.log(res))
       .catch(err => console.log(err))
   }
