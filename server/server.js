@@ -33,15 +33,15 @@ app.use('/api', require('./util/proxy'))
 
 if (!isDev) {
   const serverEntry = require('../dist/server-entry').default
-  const template = fs.readFileSync(path.join(__dirname, '../dist/index.html'), 'utf8')
-  app.use('/public', express.static(path.join(__dirname, '../dist')))
+  const template = fs.readFileSync(path.join(__dirname, '../dist/index.html'), 'utf8')// 读取末班模板
+  app.use('/public', express.static(path.join(__dirname, '../dist')))  // 静态资源
 
   app.get('/', function (req, res) {
-    const appString = ReactSSR.renderToString(serverEntry)
-    const result = template.replace('<!--app-->', appString)
-    res.send(result)
+    const appString = ReactSSR.renderToString(serverEntry)  // 将serverEntry renderToString
+    const result = template.replace('<!--app-->', appString)// 将string拼接到模板中
+    res.send(result)  // http response
   })
-} else {
+} else {  // 测试环境
   const devStatic = require('./util/dev-static')
   devStatic(app)
 }

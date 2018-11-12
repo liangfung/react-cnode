@@ -51,17 +51,17 @@ serverCompiler.watch({}, (err, stats) => {
 
 module.exports = function (app) {
 
-  app.use('/public', proxy({
+  app.use('/public', proxy({  
     target: 'http://localhost:7000'
   }))
 
-  app.get('*', function(req, res) {
+  app.get('*', function(req, res) {  // 测试环境中读取 client端的webpack-dev-server在内存中生成的编译文件
     console.log('---req---')
     console.log(`url: ${req.url}, method: ${req.method}`)
     getTemplate().then(template => {
       // content
       const content = ReactDOMServer.renderToString(serverBundle)
-      // 把 server-entry的内容 renderToString && 插入到模板
+      // 把 server-entry的内容 renderToString && 拼接到模板
       res.send(template.replace('<!--app-->', content))
     })
   })
