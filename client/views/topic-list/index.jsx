@@ -6,8 +6,17 @@ import { AppState } from '../../store/app.state'
 
 @inject('appState') @observer
 class TopicList extends React.Component {
-  static propTypes = {
-    appState: PropTypes.instanceOf(AppState).isRequired
+  // static propTypes = {
+  //   appState: PropTypes.instanceOf(AppState).isRequired
+  // }
+
+  asyncBootstrap() {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        this.props.appState.changeName('这里变化了')
+        resolve()
+      })
+    })
   }
 
   changeName = e => {

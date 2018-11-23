@@ -4,6 +4,7 @@ const MemeryFs = require('memory-fs')
 const path = require('path')
 const ReactDOMServer = require('react-dom/server')
 const proxy = require('http-proxy-middleware')
+const asyncBootstrap = require('react-async-bootstrapper')
 
 const serverConfig = require('../../build/webpack.config.server')
 
@@ -24,6 +25,7 @@ const mfs = new MemeryFs()
 const serverCompiler = webpack(serverConfig) // 根据server-config文件，编译sever-entry文件
 serverCompiler.outputFileSystem = mfs  // 将编译好的server-entry-bundle保存在内存中
 let serverBundle   // bundle 模块
+let createStoreMap
 
 serverCompiler.watch({}, (err, stats) => {
   console.log('---watch work---')
@@ -47,6 +49,7 @@ serverCompiler.watch({}, (err, stats) => {
   const m = new Module()  // new 一个Module实例，将bundle string解析成模块
   m._compile(bundle, 'server-entry.js')
   serverBundle = m.exports.default
+  createStoreMap = m.exports.createStoreMap
 })
 
 module.exports = function (app) {
@@ -59,10 +62,20 @@ module.exports = function (app) {
     console.log('---req---')
     console.log(`url: ${req.url}, method: ${req.method}`)
     getTemplate().then(template => {
-      // content
-      const content = ReactDOMServer.renderToString(serverBundle)
-      // 把 server-entry的内容 renderToString && 拼接到模板
-      res.send(template.replace('<!--app-->', content))
+
+      let routerContext = {}
+      const app = serverBundle(createStoreMap(), routerContext, req.url)
+      asyncBootstrap(app).then(() => {
+        if(routerContext.url) {
+          res.status(302).setHeader('Location', routerContext.url)
+          res.end()
+          return
+        }
+
+        const content = ReactDOMServer.renderToString(app)
+        // 把 server-entery  renderToString, 拼接到template
+        res.send(template.replace('<!--app-->', content))
+      })
     })
   })
 

@@ -9,7 +9,7 @@ const root = document.getElementById('root')
 
 const render = Component => {
   ReactDOM.hydrate(
-    <Provider appState={appState}>
+    <Provider appState={new appState()}>
       <BrowserRouter>
         <Component />
       </BrowserRouter>
