@@ -13,10 +13,13 @@
 - `<App />` jsx格式的代码，会被babel编译成 `React.clearElement()`，这也说明了为什么有jsx的地方就需要 `import React`。当然了，jsx的编译也可以更改成自定义的编译rule。
 - 
 
-## 服务端
-- 服务端文件server.js,本项目用express
-- express.static提供静态文件，可以指定**虚拟路径前缀**
+## 客户端
+- 客户端bundle js的入口是`app.js`
 
+## 服务端
+- 服务端入口文件`server.js`,本项目用express
+- express.static提供静态文件，可以指定**虚拟路径前缀**
+- 使用`server-entry.js`，作为同构中的服务端入口文件
 
 ## 开发时的服务端渲染
 1. 之前的server.js是依据在`dist`目录下生成的写在硬盘中的文件拿到的，每次修改都需要重新启动一次
@@ -30,6 +33,14 @@
 3. template, 使用`axios`拿到client端的devServer编译生成的保存在内存中的template.html(axios在server端也可以使用）
 4. HTML字符串返回，用ReactDomServer.renderToString()将`serverBundle`(mfs中的`bundle string`解析而来的)编辑成HTML字符串
 5. HTML字符串(content)和template拼接起来，形成最终的HTML string，由server返回到client，实现server端直出。
+
+## 同构
+同构，即share，共用一套代码
+
+以前的服务端渲染会针对首屏渲染和SEO，专门写一套内容。但如果采用同构的方式，可以复用页面、路由和state，不需要专门写一套用于SEO或者首屏渲染的HTML，提高开发效率
+- **页面组件**的同构 --- `ReactDOM.hydrate()` VS `ReactDOMServer.renderToString()`
+- client和server端的**路由同构** --- `react-router/BrowserRouter` VS `react-router-dom/StaticRouter`
+- **initial state**同构 --- server端获取生成initialState，拼接到`首屏`HTML模板，client端mount的时候拿到state，用于初始化客户端的state
 
 ## 工程化构建优化
 1. webpack的configuration文件分为三个，base, client, server，可以有效的减少冗余代码，提高可迭代性
