@@ -20,7 +20,11 @@ let config = merge(baseConfig, {
         template: path.join(__dirname, '../client/template.html'),
         filename: 'index.html'
       }
-    )
+    ),
+    new HTMLPlugin({
+      template: '!!ejs-compiled-loader!' + path.join(__dirname, '../client/server.template.ejs'),
+      filename: 'server.ejs'
+    })
   ]
 })
 

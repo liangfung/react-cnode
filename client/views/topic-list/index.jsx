@@ -1,8 +1,7 @@
 import React from 'react'
-import axios from 'axios'
 import { observer, inject } from 'mobx-react'
 import { PropTypes } from 'prop-types'
-import { AppState } from '../../store/app.state'
+// import { AppState } from '../../store/app.state'
 
 @inject('appState') @observer
 class TopicList extends React.Component {
@@ -10,7 +9,7 @@ class TopicList extends React.Component {
   //   appState: PropTypes.instanceOf(AppState).isRequired
   // }
 
-  asyncBootstrap() {
+  bootstrap() {
     return new Promise(resolve => {
       setTimeout(() => {
         this.props.appState.changeName('这里变化了')

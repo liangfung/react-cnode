@@ -5,12 +5,13 @@ const path = require('path')
 const ReactDOMServer = require('react-dom/server')
 const proxy = require('http-proxy-middleware')
 const asyncBootstrap = require('react-async-bootstrapper')
-
 const serverConfig = require('../../build/webpack.config.server')
+const ejs = require('ejs')
+const serialize = require('serialize-javascript')
 
 const getTemplate = () => {
   return new Promise((resolve, reject) => {
-    axios.get('http://localhost:7000/public/index.html')
+    axios.get('http://localhost:7000/public/server.ejs')
       .then(res => {
         resolve(res.data)
       })
@@ -52,6 +53,14 @@ serverCompiler.watch({}, (err, stats) => {
   createStoreMap = m.exports.createStoreMap
 })
 
+const getStoreState = (stores) => {
+  let storeNameArr = Object.keys(stores)
+  return storeNameArr.reduce((ret, storeName) => {
+    ret[storeName] = stores[storeName].toJson()
+    return ret
+  }, {})
+}
+
 module.exports = function (app) {
 
   app.use('/public', proxy({  
@@ -59,12 +68,12 @@ module.exports = function (app) {
   }))
 
   app.get('*', function(req, res) {  // 测试环境中读取 client端的webpack-dev-server在内存中生成的编译文件
-    console.log('---req---')
-    console.log(`url: ${req.url}, method: ${req.method}`)
+    console.log(`req url: ${req.url}, method: ${req.method}`)
+    
     getTemplate().then(template => {
-
       let routerContext = {}
-      const app = serverBundle(createStoreMap(), routerContext, req.url)
+      let stores = createStoreMap()
+      const app = serverBundle(stores, routerContext, req.url)
       asyncBootstrap(app).then(() => {
         if(routerContext.url) {
           res.status(302).setHeader('Location', routerContext.url)
@@ -73,8 +82,15 @@ module.exports = function (app) {
         }
 
         const content = ReactDOMServer.renderToString(app)
+        const initialState = getStoreState(stores)
+
         // 把 server-entery  renderToString, 拼接到template
-        res.send(template.replace('<!--app-->', content))
+        // res.send(template.replace('<!--app-->', content))
+        const html = ejs.render(template, {
+          appString: content,
+          initialState: serialize(initialState)
+        })
+        res.send(html)
       })
     })
   })

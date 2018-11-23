@@ -6,10 +6,11 @@ import { Provider } from 'mobx-react'
 import appState from './store/app.state'
 
 const root = document.getElementById('root')
+const initialState = window.__INITIAL_STATE__
 
 const render = Component => {
   ReactDOM.hydrate(
-    <Provider appState={new appState()}>
+    <Provider appState={new appState(initialState.appState)}>
       <BrowserRouter>
         <Component />
       </BrowserRouter>
