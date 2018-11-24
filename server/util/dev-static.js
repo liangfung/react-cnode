@@ -8,6 +8,7 @@ const asyncBootstrap = require('react-async-bootstrapper')
 const serverConfig = require('../../build/webpack.config.server')
 const ejs = require('ejs')
 const serialize = require('serialize-javascript')
+const Helmet = require('react-helmet').default
 
 const getTemplate = () => {
   return new Promise((resolve, reject) => {
@@ -20,7 +21,22 @@ const getTemplate = () => {
   )
 }
 
-const Module = module.constructor
+const NativeModule = require('module')
+const vm = require('vm')
+
+// const Module = module.constructor
+const getModuleFromString = (bundle, filename) => {
+  const m = { exports: {} }
+  const wrapper = NativeModule.wrap(bundle)
+  let script = new vm.Script(wrapper, {
+    filename,
+    displayErrors: true
+  })
+  let result = script.runInThisContext()
+  result.call(m.exports, m.exports, require, m)
+  return m
+}
+
 
 const mfs = new MemeryFs()
 const serverCompiler = webpack(serverConfig) // 根据server-config文件，编译sever-entry文件
@@ -47,8 +63,9 @@ serverCompiler.watch({}, (err, stats) => {
   const bundle = mfs.readFileSync(bundlePath, 'utf-8')
   // console.log('-----bundle string------', bundle)
 
-  const m = new Module()  // new 一个Module实例，将bundle string解析成模块
-  m._compile(bundle, 'server-entry.js')
+  // const m = new Module()  // new 一个Module实例，将bundle string解析成模块
+  // m._compile(bundle, 'server-entry.js') // 老的方式不能读取到其他的依赖
+  const m = getModuleFromString(bundle, 'server-entry.js')
   serverBundle = m.exports.default
   createStoreMap = m.exports.createStoreMap
 })
@@ -83,12 +100,15 @@ module.exports = function (app) {
 
         const content = ReactDOMServer.renderToString(app)
         const initialState = getStoreState(stores)
+        const helmet = Helmet.rewind()
 
         // 把 server-entery  renderToString, 拼接到template
         // res.send(template.replace('<!--app-->', content))
         const html = ejs.render(template, {
           appString: content,
-          initialState: serialize(initialState)
+          initialState: serialize(initialState),
+          title: helmet.title.toString(),
+          meta: helmet.meta.toString()
         })
         res.send(html)
       })
