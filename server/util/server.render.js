@@ -13,11 +13,15 @@ const getStoreState = (stores) => {
 }
 
 module.exports = (bundle, template, req, res) => {
+  console.log('-----bundle')
+  console.log(bundle)
   return new Promise((resolve, reject) => {
     let routerContext = {}
-    let createStoreMap = bundle.exports.createStoreMap
+    // let createStoreMap = bundle.exports.createStoreMap
+    let createStoreMap = bundle.createStoreMap
     let stores = createStoreMap()
-    let createApp = bundle.exports.default
+    // let createApp = bundle.exports.default
+    let createApp = bundle.default
     const app = createApp(stores, routerContext, req.url)
     asyncBootstrap(app).then(() => {
       if (routerContext.url) {

@@ -15,9 +15,6 @@ const getTemplate = () => {
       .catch(reject)
   })
 }
-
-const NativeModule = require('module')
-const vm = require('vm')
 const getModuleFromString = (bundle, filename) => {
   const m = { exports: {} }
   const wrapper = NativeModule.wrap(bundle)
@@ -30,32 +27,28 @@ const getModuleFromString = (bundle, filename) => {
   return m
 }
 
-
+const NativeModule = require('module')
+const vm = require('vm')
 const mfs = new MemeryFs()
 const serverCompiler = webpack(serverConfig) // 根据server-config文件，编译sever-entry文件
 serverCompiler.outputFileSystem = mfs  // 将编译好的server-entry-bundle保存在内存中
 let serverBundle   // bundle 模块
-
 serverCompiler.watch({}, (err, stats) => {
   if (err) throw err
   stats = stats.toJson()
   stats.errors.forEach(err => console.log(err))
   stats.warnings.forEach(warning => console.log(warning))
-
   // bundle path就是config的output的path，
   // 用于 http get 到在client端的devserver编译生成的 server-entry-bundle
   const bundlePath = path.join(
     serverConfig.output.path,
     serverConfig.output.filename
   )
-
   // mfs读取保存成内存中的编译之后的bundle，此时为 string 类型
   const bundle = mfs.readFileSync(bundlePath, 'utf-8')
-  // console.log('-----bundle string------', bundle)
-  // const m = new Module()  // new 一个Module实例，将bundle string解析成模块
-  // m._compile(bundle, 'server-entry.js') // 老的方式不能读取到其他的依赖
+  // 将bundle string加载并包一层，转化成module，并返回module
   const m = getModuleFromString(bundle, 'server-entry.js')
-  serverBundle = m
+  serverBundle = m.exports
 })
 
 module.exports = function (app) {
